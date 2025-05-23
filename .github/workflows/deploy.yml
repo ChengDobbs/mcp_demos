@@ -27,6 +27,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+          name: github-pages  # 指定 artifact 名称与部署步骤一致
 
       - name: Deploy
         uses: actions/deploy-pages@v3
+        with:
+          artifact_name: github-pages  # 必须匹配上传时的 name
