@@ -13,20 +13,22 @@ jobs:
       id-token: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
-      - name: Prepare deployment files
+      - name: Build
         run: |
-          mkdir -p deploy
-          cp -r demos/mcp/* deploy/
-          ls -R deploy
+          mkdir -p ./public  # 必须使用 public 目录
+          cp -r demos/mcp/* ./public/
+          ls -R ./public     # 验证文件结构
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'deploy'
-          retention-days: 1
+          path: 'public'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: actions/deploy-pages@v3
