@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西安景区导览</title>
+    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f5f5dc; /* 仿古纸张米黄色 */
+            /* background-image: url("data:image/png;base64,..."); */ /* 保持简洁，暂时移除背景图片 */
+            color: #5a3a22; /* 深棕色文字 */
+        }
+        .font-serif-sc {
+            font-family: 'Noto Serif SC', serif;
+        }
+        .attraction-card {
+            background-color: #fffbf0; /* 略浅的米色卡片背景 */
+            border: 1px solid #d2b48c; /* 棕褐色边框 */
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1.5rem; /* 增加内边距 */
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15); /* 调整阴影 */
+        }
+        .attraction-title {
+            color: #8B4513; /* 鞍褐色标题 */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .attraction-title:hover {
+            color: #a0522d; /* 鼠标悬停时标题颜色变深 */
+        }
+        .audio-button {
+            background-color: #D2B48C; /* 棕褐色按钮 */
+            color: white;
+            border-radius: 50%;
+            width: 36px; /* 增大按钮尺寸 */
+            height: 36px; /* 增大按钮尺寸 */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.75rem; /* 调整间距 */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        .audio-button:hover {
+            background-color: #b89a74; /* 深一点的棕褐色 */
+        }
+        .description {
+            color: #6b4f3a; /* 略深的棕色简介文字 */
+            line-height: 1.7; /* 调整行高 */
+            margin-top: 1rem; /* 调整间距 */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .description.open {
+            max-height: 1000px; /* 一个足够大的值以显示全部内容 */
+        }
+        .category-title {
+            color: #8B4513; /* 鞍褐色分类标题 */
+            border-bottom: 2px solid #D2B48C;
+            padding-bottom: 0.75rem; /* 调整内边距 */
+            margin-top: 2rem; /* 调整间距 */
+            margin-bottom: 1.5rem; /* 调整间距 */
+        }
+        audio {
+            display: none; /* 隐藏原生audio元素 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="container mx-auto max-w-4xl"> <!-- 内容居中并限制最大宽度 -->
+        <h1 class="text-4xl  font-bold font-serif-sc text-center mb-10" style="color: #8B4513;">西安旅游景点概览</h1>
+
+        <div x-data="pageController()">
+
+            <!-- 古城印记 -->
+            <h2 class="text-3xl font-semibold font-serif-sc category-title">古城印记</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">西安钟楼</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523115816-OmycsKNU.mp3?Expires=86401747972696&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=YO2fsHnfjjNxkeSqaIgAOeX00xo%3D', $refs.audioBtnIcon1)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon1"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安钟楼建成于公元1384年，位于中国陕西省西安市的市中心，城内东西南北四条大街的交汇处。它是中国古代遗留下来众多钟楼中形制最大、保存最完整的一座。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">西安鼓楼</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523115823-QdRNawSk.mp3?Expires=86401747972703&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=2TudLLP9uzpdIlka3Q7c3Bk4d9g%3D', $refs.audioBtnIcon2)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon2"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安鼓楼，位于古都西安市中心，明城墙内东西南北四条大街交汇处的西安钟楼西北方约200米处。建于明太祖朱元璋洪武十三年（1380年），是中国古代遗留下来众多鼓楼中形制最大、保存最完整鼓楼之一。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">西安城墙</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120140-ZQNhzxSo.mp3?Expires=86401747972900&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=KzF7h3Ou9U6yCfVW7f66tMDrlh4%3D', $refs.audioBtnIcon3)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon3"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安城墙，是中国现存规模最大、保存最完整的古代城垣之一。它位于陕西省西安市中心区，墙高12米，轮廓呈封闭的长方形，周长13.74千米。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">小雁塔</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120611-itnewzho.mp3?Expires=86401747973172&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=S2plSpQeWk6hbyMSoG%2B7oMsPg6g%3D', $refs.audioBtnIcon4)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon4"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>小雁塔，位于唐长安城安仁坊（今陕西省西安市南郊）荐福寺内，又称"荐福寺塔"，建于唐景龙年间，与大雁塔同为唐长安城保留的重要标志。小雁塔和荐福寺钟楼内的古钟合称为"关中八景"之一的"雁塔晨钟"，是西安博物院的组成部分，为国家AAAA级旅游景区。</p>
+                        <p class="mt-2">小雁塔是中国早期方形密檐式砖塔的典型作品，原有15层，现存13层，高43.4米，塔形秀丽，是唐代佛教建筑艺术遗产，佛教传入中原地区并融入汉族文化的标志性建筑。</p>
+                        <p class="mt-2">1961年3月4日，小雁塔被国务院公布为第一批全国重点文物保护单位。2014年6月22日，在卡塔尔多哈召开的联合国教科文组织第38届世界遗产委员会会议上，小雁塔作为中国、哈萨克斯坦和吉尔吉斯斯坦三国联合申遗的"丝绸之路：长安-天山廊道的路网"中的一处遗址点成功列入《世界遗产名录》。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史遗迹 -->
+            <h2 class="text-3xl font-semibold font-serif-sc category-title">历史遗迹</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">大明宫国家遗址公园</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523115854-NCnToJFW.mp3?Expires=86401747972734&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=TvuEIdEAc%2F%2BP9bhGpUi8ZVGVQ4w%3D', $refs.audioBtnIcon5)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon5"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                         <p>大明宫国家遗址公园，又称西安市大明宫旅游景区，位于陕西省西安市新城区自强东路585号。大明宫始建于唐贞观八年（634年），始称永安宫；贞观九年（635年）正月，改名大明宫，为唐王朝200余年间的统治中心。唐天祐元年（904年），大明宫废毁，沦为废墟。2010年10月1日，大明宫国家遗址公园建成开放。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">秦始皇兵马俑博物馆</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120510-TcFSTEFG.mp3?Expires=86401747973111&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=wQQD8xl9BUlTdTQCmsl%2FV%2BC4648%3D', $refs.audioBtnIcon6)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon6"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>秦始皇兵马俑博物馆，又称兵马俑、秦兵马俑，是秦始皇陵的陪葬坑，国家AAAAA级旅游景区，被誉为"世界第八大奇迹"，位于陕西省西安市临潼区秦陵北路。秦始皇兵马俑博物馆是中国第一个封建皇帝秦始皇嬴政的陵园中一处大型从葬坑，陵园面积218万平方米。博物馆以秦始皇兵马俑为基础，在兵马俑坑原址上建立的遗址类博物馆，也是中国最大的古代军事博物馆。</p>
+                    </div>
+                </div>
+
+                 <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">华清宫</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120538-jfRgMbQZ.mp3?Expires=86401747973138&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=cVLllLGJtmURGa%2FpH0b4bXpJ2iE%3D', $refs.audioBtnIcon7)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon7"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安市华清宫景区，简称华清宫景区，是位于陕西省西安市临潼区境内的旅游景区，景区在唐华清宫遗址的基础上修建而成，已成为中国唐宫文化旅游标志性景区。华清宫远在周代时是露天汤池，唐玄宗时，"治汤井为池，环山列宫殿"，建造了"华清宫"。因其亘古不变的温泉资源、烽火戏诸侯的历史典故、唐明皇与杨贵妃的爱情故事、"西安事变"发生地而享誉海内外，成为中国唐文化旅游标志性景区。华清宫内集中着唐御汤遗址博物馆、西安事变旧址—五间厅、九龙湖与芙蓉湖风景区、唐梨园遗址博物馆等文化区和飞霜殿、万寿殿、长生殿、环园和禹王殿等标志性建筑群。骊山海拔1302米，老母殿、老君殿、烽火台、兵谏亭、石瓮寺、遇仙桥等景点星罗棋布，"骊山晚照"是著名的"关中八景"之一。2007年5月8日，西安市华清池景区被中华人民共和国国家旅游局确定为国家AAAAA级旅游景区。2015年1月，华清池景区与骊山景区合并升级为华清宫景区。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 博览观珍 -->
+            <h2 class="text-3xl font-semibold font-serif-sc category-title">博览观珍</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">陕西历史博物馆</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120232-RxdZWQQj.mp3?Expires=86401747972952&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=%2Bdjhw3jEkjpYyAzT1JK3PAxnHq4%3D', $refs.audioBtnIcon8)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon8"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>陕西历史博物馆是一座位于中国陕西省西安市雁塔区小寨东路91号的综合性历史类大型国家级博物馆，是中国第一座大型现代化国家级博物馆，它的建成标志着中国博物馆事业迈入了新的发展里程。陕西历史博物馆前身为民国三十三年（1944年）六月成立的陕西省历史博物馆，1950年改称西北历史陈列馆，1952年改称陕西省博物馆，1983年开始在现址兴建新馆，1991年6月20日新馆建成并正式定名陕西历史博物馆。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">西安碑林博物馆</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120655-xSSUffww.mp3?Expires=86401747973215&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=bKWuO%2BD0z1V3BwZBmVbRF1LWQFs%3D', $refs.audioBtnIcon9)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon9"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安碑林博物馆（Xi\'an Beilin Museum），是陕西创建最早的博物馆，它以收藏、研究和陈列历代碑石、墓志及石刻文物为主，成为在中国独树一帜的艺术博物馆。馆区由孔庙、碑林、石刻艺术室三部分组成，现有馆藏文物11000余件，其中国宝级文物19个号134件，一级文物535件。著名的"昭陵六骏"就有四骏藏于馆内。西安碑林博物馆是第一批全国重点文物保护单位、国家一级博物馆、国家AAAA级旅游景区、全国古籍重点保护单位。西安碑林始建于北宋元祐二年（1087年），最早是漕运使吕大忠等人为保藏因唐末五代战乱而委弃市井的《开成石经》及颜真卿、柳公权等所书的著名石碑而兴建的，经金、元、明、清、民国历代的维修及增建，规模不断扩大，藏石日益增多，1944年，在西安孔庙基础上，利用碑林、明伦堂、辟雍、尊经阁等古建筑建立"陕西省博物馆"，1950年改名"西北历史文物陈列馆"，1952年又改名"陕西省博物馆"，1992年正式更名为"西安碑林博物馆"。2021年5月18日，被评为中国特色博物馆。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 风情街区 -->
+            <h2 class="text-3xl font-semibold font-serif-sc category-title">风情街区</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">回民街</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120017-ZAffUdCA.mp3?Expires=86401747972817&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=2f6yjiHGaxWZ4UH%2BN%2BYjcTHaW60%3D', $refs.audioBtnIcon10)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon10"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>回民街（The Muslim Quarter）是西安著名的美食文化街区，是多条街道的统称，由北院门、北广济街、西羊市、大皮院、化觉巷、洒金桥等数条街道组成。西安本地人对这片区域统称"坊上"，外地游客则习惯称为"回民街"。回民街所在北院门街道，在北宋晚期至南宋初就已成为西安回族聚居的地方，明清时期则发展为回族传统商贸活动区。1992年，北院门街道实行改造，将沥青路街道和两侧砖铺人行道改铺为青石，两侧按明清风格建2层楼房。1993年9月，建成仿古文化旅游街。由于此处为回族居民聚集生活之地，故名。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">大唐不夜城</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120033-dnDaNYqu.mp3?Expires=86401747972833&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=dMfyu4IF%2F7sARHxA8BR%2B8NW5kXc%3D', $refs.audioBtnIcon11)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon11"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>大唐不夜城，位于陕西省西安市雁塔区的大雁塔脚下，为中国唯一一个以盛唐文化为背景的大型仿唐建筑群步行街，为西安地标性景区。其总占地936万平方米，总建筑面积65万平方米，南北长2100米，东西宽500米，北起大雁塔南广场，南至唐城墙遗址，东起慈恩东路，西至慈恩西路。</p>
+                    </div>
+                </div>
+
+                <div class="attraction-card" x-data="attractionCard()">
+                    <div class="flex justify-between items-center">
+                        <h3 @click="toggleDescription($el.parentElement.nextElementSibling)" class="text-2xl font-serif-sc attraction-title">大雁塔·大唐芙蓉园景区</h3>
+                        <button @click="playAudio('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/audio%2Ftts-mp3-20250523120322-sqawTdsW.mp3?Expires=86401747973002&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=ae1oJ%2BNN%2Bkp0jRSnSBYA5YfAeyw%3D', $refs.audioBtnIcon12)" 
+                                class="audio-button" aria-label="播放/暂停音频">
+                            <i class="fas fa-play" x-ref="audioBtnIcon12"></i>
+                        </button>
+                    </div>
+                    <div class="description">
+                        <p>西安市大雁塔－大唐芙蓉园景区，简称大雁塔－大唐芙蓉园景区，位于陕西省西安市曲江新区核心区域，总面积3.8平方公里，汇聚了"六园一城一塔"的产品格局。六园即大唐芙蓉园、曲江池遗址公园、唐城墙遗址公园、唐大慈恩寺遗址公园、寒窑遗址公园、秦二世陵遗址公园；一城即大唐不夜城，一塔即大慈恩寺大雁塔。2011年1月14日，大雁塔－大唐芙蓉园景区被中华人民共和国文化和旅游部确认为国家AAAAA级旅游景区。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function pageController() {
+            return {
+                activeAudio: null,
+                activeAudioSrc: '',
+                activeButtonIcon: null,
+
+                playAudio(src, buttonIcon) {
+                    // If clicking the button of an already active audio (playing or paused)
+                    if (this.activeAudio && this.activeAudioSrc === src) {
+                        if (this.activeAudio.paused) { // If it was paused, play it
+                            this.activeAudio.play();
+                            buttonIcon.classList.remove('fa-play');
+                            buttonIcon.classList.add('fa-pause');
+                        } else { // If it was playing, pause it
+                            this.activeAudio.pause();
+                            buttonIcon.classList.remove('fa-pause');
+                            buttonIcon.classList.add('fa-play');
+                        }
+                    } else { // Clicking a new audio button, or there's no active audio
+                        // Stop and reset any currently active audio
+                        if (this.activeAudio) {
+                            this.activeAudio.pause();
+                            if (this.activeButtonIcon) {
+                                this.activeButtonIcon.classList.remove('fa-pause');
+                                this.activeButtonIcon.classList.add('fa-play');
+                            }
+                        }
+
+                        // Create and play the new audio
+                        this.activeAudio = new Audio(src);
+                        this.activeAudioSrc = src;
+                        this.activeButtonIcon = buttonIcon;
+                        
+                        this.activeAudio.play();
+                        buttonIcon.classList.remove('fa-play');
+                        buttonIcon.classList.add('fa-pause');
+
+                        this.activeAudio.onended = () => {
+                            if (this.activeButtonIcon === buttonIcon) { // Check if it's still the active one
+                                buttonIcon.classList.remove('fa-pause');
+                                buttonIcon.classList.add('fa-play');
+                                this.activeAudio = null;
+                                this.activeAudioSrc = '';
+                                this.activeButtonIcon = null;
+                            }
+                        };
+                         this.activeAudio.onerror = () => {
+                            console.error("音频播放错误: ", src);
+                            if (this.activeButtonIcon === buttonIcon) {
+                                buttonIcon.classList.remove('fa-pause');
+                                buttonIcon.classList.add('fa-play');
+                                this.activeAudio = null;
+                                this.activeAudioSrc = '';
+                                this.activeButtonIcon = null;
+                            }
+                        };
+                    }
+                }
+            };
+        }
+
+        function attractionCard() {
+            return {
+                toggleDescription(descriptionElement) {
+                    descriptionElement.classList.toggle('open');
+                }
+            };
+        }
+    </script>
+
+</body>
+</html> 
