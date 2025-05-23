@@ -5,17 +5,23 @@ on:
     branches:
       - main
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v3
+        with:
+          enablement: true
 
-      - name: Upload artifacts
+      - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
           path: demos
