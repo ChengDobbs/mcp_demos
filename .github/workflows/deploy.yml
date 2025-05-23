@@ -22,9 +22,9 @@ jobs:
           cp -r demos/mcp/* public/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public'  # 包含HTML文件的目录
+          path: 'public'
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v3
