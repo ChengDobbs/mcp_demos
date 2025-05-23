@@ -25,13 +25,13 @@ jobs:
 
       # 关键点2：显式指定同名 artifact
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: 'public'
-          name: 'pages_artifact'  # 自定义名称
+          name: 'pages_artifact'
 
       # 关键点3：部署时使用相同名称
       - name: Deploy
         uses: actions/deploy-pages@v3
         with:
-          artifact_name: 'pages_artifact'  # 必须与上传名称一致
+          artifact_name: 'pages_artifact'
