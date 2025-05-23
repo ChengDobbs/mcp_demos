@@ -16,18 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Prepare artifact
+      - name: Prepare deployment files
         run: |
-          mkdir -p public
-          cp -r demos/mcp/* public/
+          mkdir -p deploy
+          cp -r demos/mcp/* deploy/
+          ls -R deploy
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public'
-          name: 'pages-artifact'
+          path: 'deploy'
+          retention-days: 1
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v3
-        with:
-          artifact_name: 'pages-artifact'
