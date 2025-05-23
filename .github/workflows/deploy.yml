@@ -16,7 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 构建符合你要求的目录结构
       - name: Prepare files
         run: |
           mkdir -p ./public/demos/mcp
@@ -24,6 +23,10 @@ jobs:
           echo "jch.ai" > ./public/CNAME
           tree ./public
 
-      # 官方推荐部署方式（兼容私有仓库）
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
       - name: Deploy
         uses: actions/deploy-pages@v3
