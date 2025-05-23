@@ -1,5 +1,9 @@
 name: Deploy HTML Pages
-on: [push]
+
+on:
+  push:
+    branches: [ main ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -7,9 +11,20 @@ jobs:
       contents: write
       pages: write
       id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/deploy-pages@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p public
+          cp -r demos/mcp/* public/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          target_branch: gh-pages
-          publish_dir: ./demos/mcp
+          path: 'public'  # 包含HTML文件的目录
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v3
