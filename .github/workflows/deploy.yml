@@ -1,4 +1,4 @@
-name: Deploy HTML Pages
+name: Deploy to Custom Path
 
 on:
   push:
@@ -7,31 +7,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 关键点1：必须使用 public 目录
-      - name: Prepare files
+      # 创建符合你要求的目录结构
+      - name: Prepare directory structure
         run: |
-          mkdir -p ./public
-          cp -r demos/mcp/* ./public/
-          echo "Files to deploy:" && ls -R ./public
+          mkdir -p ./public/demos/mcp
+          cp -r demos/mcp/* ./public/demos/mcp/
+          echo "生成的文件结构：" && tree ./public
 
-      # 关键点2：显式指定同名 artifact
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          path: 'public'
-          name: 'pages_artifact'
-
-      # 关键点3：部署时使用相同名称
+      # 使用兼容性更强的 peaceiris/actions-gh-pages
       - name: Deploy
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          artifact_name: 'pages_artifact'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: false
